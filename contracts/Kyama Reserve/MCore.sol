@@ -44,17 +44,17 @@ contract MCore is AccessControl {
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
         // Get total account value
         uint256 totalAccVal = base.getTotalMVal(accShareCapital);
-        // Get account M-Bill pPS
-        uint256 acc_MPPS = totalAccVal.div(accShareCapital);
+        // Store current pps
+        uint256 depositPPS = base.currentMPPS();
         // Deposit amount
         uint256 depositAmount = msg.value;
 
-        require(depositAmount > acc_MPPS, "Ether amount is too low for this transaction.");
+        require(depositAmount > depositPPS, "Ether amount is too low for this transaction.");
 
         // Get the price-divisible amount deposited.
         // This technique prevents potential solidity floating point calculation errors.
         // However, this should not lead to any significant share capital buy in loss on the account holder.
-        uint256 priceDivisibleDeposit = depositAmount - (depositAmount.mod(acc_MPPS));
+        uint256 priceDivisibleDeposit = depositAmount - (depositAmount.mod(depositPPS));
 
         // Transfer funds to MBill contract
         mBillPayableAddress.transfer(msg.value);
@@ -63,7 +63,7 @@ contract MCore is AccessControl {
         base.incrementTotalCapital(depositAmount);
 
         // Calculate deposit share capital
-        uint256 shareCapital = priceDivisibleDeposit.div(acc_MPPS);
+        uint256 shareCapital = priceDivisibleDeposit.div(depositPPS);
 
         // Increment total M-Bills issued
         base.incrementTotalMIssued(depositAmount);

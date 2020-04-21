@@ -101,7 +101,7 @@ contract Base {
     // Constructor function to set initial data values
     constructor() public {
         // Set initial M-Bill ppS
-        currentMPPS = 10;
+        currentMPPS = 2;
 
         // Initialize M-ppS increase index
         currentMIndex = 0;
@@ -290,16 +290,16 @@ contract Base {
         // Update account counters
         if(_valIn > 0) {
             accounts[accountIndexes[_accountAddress]].m_running_value = accounts[accountIndexes[_accountAddress]].m_running_value + int256(_valIn);
-            accounts[accountIndexes[_accountAddress]].totalDeposit = accounts[accountIndexes[_accountAddress]].totalDeposit + _valIn;
+            accounts[accountIndexes[_accountAddress]].totalDeposit = accounts[accountIndexes[_accountAddress]].totalDeposit.add(_valIn);
         }
 
         if(_valOut > 0) {
             accounts[accountIndexes[_accountAddress]].m_running_value = accounts[accountIndexes[_accountAddress]].m_running_value - int256(_valOut);
 
             if(_coParty == address(0)) {
-                accounts[accountIndexes[_accountAddress]].totalWithdrawal = accounts[accountIndexes[_accountAddress]].totalWithdrawal + _valOut;
+                accounts[accountIndexes[_accountAddress]].totalWithdrawal = accounts[accountIndexes[_accountAddress]].totalWithdrawal.add(_valOut);
             } else {
-                accounts[accountIndexes[_accountAddress]].totalTransfer = accounts[accountIndexes[_accountAddress]].totalTransfer + _valOut;
+                accounts[accountIndexes[_accountAddress]].totalTransfer = accounts[accountIndexes[_accountAddress]].totalTransfer.add(_valOut);
             }
         }
 
@@ -408,7 +408,7 @@ contract Base {
                                                 [accountIndexes[_accountAddress]].m_running_value - int256(_valRequested);
 
         // Update totalDebenture
-        accounts[accountIndexes[_accountAddress]].totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture + _valRequested;
+        accounts[accountIndexes[_accountAddress]].totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture.add(_valRequested);
 
         // Update mDebentureCount
         mDebentureCount = mDebentures.length;
@@ -544,8 +544,8 @@ contract Base {
         }
     }
 
-    // Get account total interest value
-    function accountTotalInterest(address _accountAddress, uint256 _accShareCap) public isApproved returns(uint256) {
+    // Get account current interest value
+    function accountCurrentInterest(address _accountAddress, uint256 _accShareCap) public view isApproved returns(uint256) {
         // Get account running value
         int256 accRunningVal = accounts[accountIndexes[_accountAddress]].m_running_value;
         uint256 currentAccountInterest = 0;
@@ -558,6 +558,13 @@ contract Base {
                 currentAccountInterest = totalMVal.sub(runningVal);
             }
         }
+
+        return currentAccountInterest;
+    }
+
+    // Get account total interest value
+    function accountTotalInterest(address _accountAddress, uint256 _accShareCap) public isApproved returns(uint256) {
+        uint256 currentAccountInterest = accountCurrentInterest(_accountAddress, _accShareCap);
 
         uint256 accHighestInterest = accounts[accountIndexes[_accountAddress]].highestMInterest;
         if(accHighestInterest >= currentAccountInterest) {

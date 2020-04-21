@@ -40,10 +40,6 @@ contract MCore is AccessControl {
     function deposit() public requireIsOperational payable {
         require(base.isUserRegistered(msg.sender) == true, "Address provided for deposit is not linked to a Kyama account.");
 
-        // Get current account share capital
-        uint256 accShareCapital = mBill.balanceOf(msg.sender);
-        // Get total account value
-        uint256 totalAccVal = base.getTotalMVal(accShareCapital);
         // Store current pps
         uint256 depositPPS = base.currentMPPS();
         // Deposit amount

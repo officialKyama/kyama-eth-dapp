@@ -408,7 +408,7 @@ contract Base {
                                                 [accountIndexes[_accountAddress]].m_running_value - int256(_valRequested);
 
         // Update totalDebenture
-        accounts[accountIndexes[_accountAddress]].totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture + _valRequested;
+        accounts[accountIndexes[_accountAddress]].totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture.add(_valRequested);
 
         // Update mDebentureCount
         mDebentureCount = mDebentures.length;

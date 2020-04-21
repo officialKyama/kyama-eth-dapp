@@ -69,6 +69,9 @@ contract MCore is AccessControl {
         // Record M-Bill deposit
         base.recordMData(msg.sender, depositAmount, uint256(0), address(0), shareCapital);
 
+        // Update the current M-Bill price per share
+        base.updateMPPs();
+
         // Mint M-Bills for the account owner
         mBill.mintM_Bill(msg.sender, shareCapital);
 

@@ -101,7 +101,7 @@ contract Base {
     // Constructor function to set initial data values
     constructor() public {
         // Set initial M-Bill ppS
-        currentMPPS = 2;
+        currentMPPS = 10;
 
         // Initialize M-ppS increase index
         currentMIndex = 0;

@@ -38,7 +38,7 @@ contract MBill is ERC20, ERC20Detailed {
         callAccess[_toRevokeAddress] = false;
     }
 
-    //A Functon to facilitate the minting of M-Bill(s)
+    // Functon to facilitate the minting of M-Bill(s)
     function mintM_Bill(address _accountAddress, uint256 _tokenValue) external isApproved {
         require(_accountAddress != address(0), "Address provided for M-Bill minting is invalid.");
         require(_tokenValue > 0, "Token value provided for M-Bill minting is invalid.");
@@ -47,7 +47,7 @@ contract MBill is ERC20, ERC20Detailed {
         _mint(_accountAddress, _tokenValue);
     }
 
-    //A Function to facilitate burning of M-Bill(s)
+    // Function to facilitate burning of M-Bill(s)
     function burnM_Bill(address _accountAddress, uint256 _tokenValue) external isApproved {
         require(_accountAddress != address(0), "Address provided for M-Bill burning is invalid.");
         require(_tokenValue > 0, "Token value provided for M-Bill burning is invalid.");
@@ -56,7 +56,7 @@ contract MBill is ERC20, ERC20Detailed {
         _burn(_accountAddress, _tokenValue);
     }
 
-    //A Function to facilitate transfer of M-Bill(s)
+    // Function to facilitate transfer of M-Bill(s)
     function transferM_Bill(address _accountAddress, address _recipientAddress, uint256 _tokenValue) external isApproved {
         require(_accountAddress != address(0), "Address provided for M-Bill burning is invalid.");
         require(_recipientAddress != address(0), "Recipient address provided for M-Bill burning is invalid.");
@@ -66,7 +66,7 @@ contract MBill is ERC20, ERC20Detailed {
         _transfer(_accountAddress, _recipientAddress, _tokenValue);
     }
 
-    //A Function to facilitate the issuance of ether to a payable address
+    // Function to facilitate the issuance of ether to a payable address
     function issueEther(address payable _payableAddress, uint256 _issueAmount) external isApproved {
         require(_payableAddress != address(0), "Address provided for ether issuance is invalid.");
         require(_issueAmount > 0, "Ether issue amount is invalid.");

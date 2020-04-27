@@ -356,15 +356,13 @@ contract Base {
     function getTotalMWithdrawable(address _accAddress, uint256 _accShareCap) external isApproved returns(uint256) {
         // Get total raw M-Bill value on account
         uint256 totalMVal = getMRawVal(_accShareCap);
-        // Get account total adding interest
-        uint256 totalAddingInterest = accountTotalInterest(_accAddress, _accShareCap);
         // Get total interest value on account M-Bills
         uint256 totalMInterestVal = getMInterest(_accShareCap);
 
         // Get account withdrawable interest
-        uint256 withdrawableInterest = (((totalAddingInterest.add(totalMInterestVal))).mul(withdrawalCharge[0])).div(withdrawalCharge[1]);
+        uint256 withdrawableInterest = ((totalMInterestVal).mul(withdrawalCharge[0])).div(withdrawalCharge[1]);
         // Get account maximum withdrawable amount
-        uint256 maxWithdrawableAmount = (totalMVal.sub(totalAddingInterest)).add(withdrawableInterest);
+        uint256 maxWithdrawableAmount = (totalMVal).add(withdrawableInterest);
 
         return maxWithdrawableAmount;
     }
@@ -373,15 +371,13 @@ contract Base {
     function getTotalDebenture(address _accAddress, uint256 _accShareCap) public isApproved returns(uint256) {
         // Get total raw M-Bill value on account
         uint256 totalMVal = getMRawVal(_accShareCap);
-        // Get account total adding interest
-        uint256 totalAddingInterest = accountTotalInterest(_accAddress, _accShareCap);
         // Get total interest value on account M-Bills
         uint256 totalMInterestVal = getMInterest(_accShareCap);
 
         // Get account debenture interest
-        uint256 debentureInterest = ((totalMInterestVal.add(totalAddingInterest)).mul(debentureCharge[0])).div(debentureCharge[1]);
+        uint256 debentureInterest = ((totalMInterestVal).mul(debentureCharge[0])).div(debentureCharge[1]);
         // Get account maximum debenture amount
-        uint256 maxDebentureAmount = (totalMVal.sub(totalAddingInterest)).add(debentureInterest);
+        uint256 maxDebentureAmount = (totalMVal).add(debentureInterest);
 
         return maxDebentureAmount;
     }

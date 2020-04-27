@@ -253,9 +253,9 @@ contract Base {
     }
 
     // Function to check if account has met investment consensus
-    function isAccountHarmonized(address _accountAddress, uint256 _accShareCap) external isApproved returns (bool) {
+    function isAccountHarmonized(address _accountAddress, uint256 _accShareCap) external view isApproved returns (bool) {
         uint256 accInitInvestment = accounts[accountIndexes[_accountAddress]].initInvestment;
-        uint256 maxDebenture = getTotalDebenture(_accountAddress, _accShareCap);
+        uint256 maxDebenture = getTotalDebenture(_accShareCap);
         uint256 totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture;
         uint256 totalWithdrawal = accounts[accountIndexes[_accountAddress]].totalWithdrawal;
         uint256 totalTransfer = accounts[accountIndexes[_accountAddress]].totalTransfer;
@@ -353,7 +353,7 @@ contract Base {
     }
 
     // Function to get total M-Bill withdrawable value from acount
-    function getTotalMWithdrawable(address _accAddress, uint256 _accShareCap) external isApproved returns(uint256) {
+    function getTotalMWithdrawable(uint256 _accShareCap) external view isApproved returns(uint256) {
         // Get total raw M-Bill value on account
         uint256 totalMVal = getMRawVal(_accShareCap);
         // Get total interest value on account M-Bills
@@ -368,7 +368,7 @@ contract Base {
     }
 
     // Function to get an account's maximum M-Bill debenture request amount
-    function getTotalDebenture(address _accAddress, uint256 _accShareCap) public isApproved returns(uint256) {
+    function getTotalDebenture(uint256 _accShareCap) public view isApproved returns(uint256) {
         // Get total raw M-Bill value on account
         uint256 totalMVal = getMRawVal(_accShareCap);
         // Get total interest value on account M-Bills

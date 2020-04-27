@@ -76,7 +76,7 @@ contract MGenerous is AccessControl {
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
         // Get account maximum debenture amount
-        uint256 maxDebenture = base.getTotalDebenture(msg.sender, accShareCapital);
+        uint256 maxDebenture = base.getTotalDebenture(accShareCapital);
 
         require(base.isAccountHarmonized(msg.sender, accShareCapital) == true, "Account is yet to meet investment consensus.");
 

@@ -88,7 +88,7 @@ contract MCore is AccessControl {
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
         // Get account max-withdrawable amount
-        uint256 maxWithdrawable = base.getTotalMWithdrawable(msg.sender, accShareCapital);
+        uint256 maxWithdrawable = base.getTotalMWithdrawable(accShareCapital);
 
         // Ensure that intended withdrawable amount is within acceptable range
         require(_withdrawalAmount <= maxWithdrawable, "Withdrawal amount provided is above account withdrawal quota.");

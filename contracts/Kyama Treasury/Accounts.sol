@@ -33,7 +33,7 @@ contract Accounts is AccessControl {
     }
 
     // Check if account has met investment consensus
-    function isAccountHarmonized() external returns (bool) {
+    function isAccountHarmonized() external view returns (bool) {
         require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");
 
         // Get share capital value of account holder
@@ -93,27 +93,27 @@ contract Accounts is AccessControl {
     }
 
     // Functon to get an account's maximum M-Bill withdrawable amount
-    function maxMWithdrawable() external returns(uint256) {
+    function maxMWithdrawable() external view returns(uint256) {
         require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");
 
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
         // Get account maximum withdrawable amount
-        uint256 maxWithdrawable = base.getTotalMWithdrawable(msg.sender, accShareCapital);
+        uint256 maxWithdrawable = base.getTotalMWithdrawable(accShareCapital);
 
         return maxWithdrawable;
     }
 
     // Function to get an account's maximum debenture request amount
-    function maxMLendable() external returns(uint256) {
+    function maxMLendable() external view returns(uint256) {
         require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");
 
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
         // Get account maximum debenture amount
-        uint256 maxDebenture = base.getTotalDebenture(msg.sender, accShareCapital);
+        uint256 maxDebenture = base.getTotalDebenture(accShareCapital);
 
         return maxDebenture;
     }

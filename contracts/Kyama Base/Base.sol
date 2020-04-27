@@ -289,12 +289,16 @@ contract Base {
 
         // Update account counters
         if(_valIn > 0) {
-            accounts[accountIndexes[_accountAddress]].m_running_value = accounts[accountIndexes[_accountAddress]].m_running_value + int256(_valIn);
+            require(accounts[accountIndexes[_accountAddress]].m_running_value + int256(_valIn) >
+             accounts[accountIndexes[_accountAddress]].m_running_value, "Running value _valIn error");
+            accounts[accountIndexes[_accountAddress]].m_running_value += int256(_valIn);
             accounts[accountIndexes[_accountAddress]].totalDeposit = accounts[accountIndexes[_accountAddress]].totalDeposit.add(_valIn);
         }
 
         if(_valOut > 0) {
-            accounts[accountIndexes[_accountAddress]].m_running_value = accounts[accountIndexes[_accountAddress]].m_running_value - int256(_valOut);
+            require(accounts[accountIndexes[_accountAddress]].m_running_value - int256(_valOut) <
+             accounts[accountIndexes[_accountAddress]].m_running_value, "Running value _valOut error");
+            accounts[accountIndexes[_accountAddress]].m_running_value -= int256(_valOut);
 
             if(_coParty == address(0)) {
                 accounts[accountIndexes[_accountAddress]].totalWithdrawal = accounts[accountIndexes[_accountAddress]].totalWithdrawal.add(_valOut);
@@ -400,8 +404,9 @@ contract Base {
         uint256 newTxPosition = mDebentures.length.sub(1);
 
         // Update m_running_value
-        accounts[accountIndexes[_accountAddress]].m_running_value = accounts
-                                                [accountIndexes[_accountAddress]].m_running_value - int256(_valRequested);
+        require(accounts[accountIndexes[_accountAddress]].m_running_value - int256(_valRequested) <
+         accounts[accountIndexes[_accountAddress]].m_running_value, "Running value _valRequested error");
+        accounts[accountIndexes[_accountAddress]].m_running_value -= int256(_valRequested);
 
         // Update totalDebenture
         accounts[accountIndexes[_accountAddress]].totalDebenture = accounts[accountIndexes[_accountAddress]].totalDebenture.add(_valRequested);
@@ -536,7 +541,9 @@ contract Base {
             }
 
             // Update m_running_value
-            accounts[accountIndexes[_accountAddress]].m_running_value = accounts[accountIndexes[_accountAddress]].m_running_value + int256(_payableValue);
+            require(accounts[accountIndexes[_accountAddress]].m_running_value + int256(_payableValue) >
+             accounts[accountIndexes[_accountAddress]].m_running_value, "Running value _payableValue error");
+            accounts[accountIndexes[_accountAddress]].m_running_value += int256(_payableValue);
         }
     }
 

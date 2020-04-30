@@ -100,14 +100,22 @@ contract MGenerous is AccessControl {
         // Get debenture share capital
         uint256 debentureShareCap = _debentureAmount.div(acc_MPPS);
 
+        // Get cost of approved debenture
+        uint256 debentureCost = base.getDebentureCost(accShareCapital, _debentureAmount);
+        // Get share capital equivalent to debenture cost
+        uint256 debentureCostShareCap = debentureCost.div(acc_MPPS);
+
         // Burn account's tokens equivalent to the debenture amount
         mBill.burnM_Bill(msg.sender, debentureShareCap);
+        // Burn account's tokens equivalent to the debenture cost
+        mBill.burnM_Bill(msg.sender, debentureCostShareCap);
 
         // Decrement Kyama's total capital
         base.decrementTotalCapital(_debentureAmount);
 
         // Decrement total M-Bills issued
         base.decrementTotalMIssued(_debentureAmount);
+        base.decrementTotalMIssued((debentureCost.mul(60)).div(100));
         // Decrement total M-Bill share capital
         base.decrementMShareCap(debentureShareCap);
 

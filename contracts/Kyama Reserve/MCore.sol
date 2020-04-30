@@ -104,14 +104,22 @@ contract MCore is AccessControl {
         // Get withdrawal share capital
         uint256 withdrawalShareCap = _withdrawalAmount.div(acc_MPPS);
 
+        // Get cost of withdrawal
+        uint256 withdrawalCost = base.getWithdrawalCost(accShareCapital, _withdrawalAmount);
+        // Get share capital equivalent to withdrawal cost
+        uint256 withdrawalCostShareCap = withdrawalCost.div(acc_MPPS);
+
         // Burn account's tokens equivalent to the withdrawal amount
         mBill.burnM_Bill(msg.sender, withdrawalShareCap);
+        // Burn account's tokens equivalent to the withdrawal cost
+        mBill.burnM_Bill(msg.sender, withdrawalCostShareCap);
 
         // Decrement Kyama's total capital
         base.decrementTotalCapital(_withdrawalAmount);
 
         // Decrement total M-Bills issued
         base.decrementTotalMIssued(_withdrawalAmount);
+        base.decrementTotalMIssued((withdrawalCost.mul(60)).div(100));
         // Decrement total M-Bill share capital
         base.decrementMShareCap(withdrawalShareCap);
 

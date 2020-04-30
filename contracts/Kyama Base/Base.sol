@@ -371,6 +371,31 @@ contract Base {
         return maxWithdrawableAmount;
     }
 
+    // Function to get cost for account withdrawal
+    function getWithdrawalCost(uint256 _accShareCap, uint256 _withdrawalAmount) external view isApproved returns(uint256) {
+        // Get total raw M-Bill value on account
+        uint256 totalMVal = getTotalMVal(_accShareCap);
+
+        // Get ratio of withdrawal amount to total account value
+        uint256 percWithdrawal = (_withdrawalAmount.div(totalMVal)).mul(100);
+        if(percWithdrawal == uint256(0)) {
+            percWithdrawal = 1;
+        }
+
+        // Get ratio of (100% - withdrawalCharge%) of total account interest to withdrawal amount
+        // Get total interest value on account M-Bills
+        uint256 totalMInterestVal = getMInterest(_accShareCap);
+        // Get account withdrawable interest
+        uint256 withdrawableInterest = ((totalMInterestVal).mul(withdrawalCharge[0])).div(withdrawalCharge[1]);
+        // Get (100% - withdrawalCharge%) of total account interest
+        uint256 remWithdrawableInterest = totalMInterestVal.sub(withdrawableInterest);
+
+        // Get withdrawal cost
+        uint256 withdrawalCost = percWithdrawal.mul(remWithdrawableInterest);
+
+        return withdrawalCost;
+    }
+
     // Function to get an account's maximum M-Bill debenture request amount
     function getTotalDebenture(uint256 _accShareCap) public view isApproved returns(uint256) {
         // Get total raw M-Bill value on account

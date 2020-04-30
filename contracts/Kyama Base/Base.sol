@@ -411,6 +411,31 @@ contract Base {
         return maxDebentureAmount;
     }
 
+    // Function to get cost for approved debenture request
+    function getDebentureCost(uint256 _accShareCap, uint256 _debentureAmount) external view isApproved returns(uint256) {
+        // Get total raw M-Bill value on account
+        uint256 totalMVal = getTotalMVal(_accShareCap);
+
+        // Get ratio of debenture amount to total account value
+        uint256 percDebenture = (_debentureAmount.div(totalMVal)).mul(100);
+        if(percDebenture == uint256(0)) {
+            percDebenture = 1;
+        }
+
+        // Get ratio of (100% - debentureCharge%) of total account interest to debenture amount
+        // Get total interest value on account M-Bills
+        uint256 totalMInterestVal = getMInterest(_accShareCap);
+        // Get account debenture interest
+        uint256 debentureInterest = ((totalMInterestVal).mul(debentureCharge[0])).div(debentureCharge[1]);
+        // Get (100% - debentureCharge%) of total account interest
+        uint256 remDebentureInterest = totalMInterestVal.sub(debentureInterest);
+
+        // Get debenture cost
+        uint256 debentureCost = percDebenture.mul(remDebentureInterest);
+
+        return debentureCost;
+    }
+
     // Function to record M-Bill debenture tx
     function recordMDebenture(address _accountAddress, uint256 _valRequested, uint256 _shareCap) external isApproved {
         // Get the value expected

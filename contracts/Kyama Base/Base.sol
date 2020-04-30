@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.4.21;
 
 /// @title Contract that contains main application data (storage)
 /// @dev Kyama-Project

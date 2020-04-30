@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.4.21;
 
 /// @title Contract that controls how privileges are assigned to different administrators in the Kyama project
 /// @dev Kyama-Project

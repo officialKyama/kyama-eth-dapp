@@ -391,7 +391,7 @@ contract Base {
         uint256 remWithdrawableInterest = totalMInterestVal.sub(withdrawableInterest);
 
         // Get withdrawal cost
-        uint256 withdrawalCost = percWithdrawal.mul(remWithdrawableInterest);
+        uint256 withdrawalCost = (percWithdrawal.mul(remWithdrawableInterest)).div(100);
 
         return withdrawalCost;
     }
@@ -431,7 +431,7 @@ contract Base {
         uint256 remDebentureInterest = totalMInterestVal.sub(debentureInterest);
 
         // Get debenture cost
-        uint256 debentureCost = percDebenture.mul(remDebentureInterest);
+        uint256 debentureCost = (percDebenture.mul(remDebentureInterest)).div(100);
 
         return debentureCost;
     }

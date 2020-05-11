@@ -357,7 +357,7 @@ contract Base {
     }
 
     // Function to get total M-Bill withdrawable value from acount
-    function getTotalMWithdrawable(uint256 _accShareCap) external view isApproved returns(uint256) {
+    function getTotalMWithdrawable(uint256 _accShareCap) public view isApproved returns(uint256) {
         // Get total raw M-Bill value on account
         uint256 totalMVal = getMRawVal(_accShareCap);
         // Get total interest value on account M-Bills
@@ -373,11 +373,14 @@ contract Base {
 
     // Function to get cost for account withdrawal
     function getWithdrawalCost(uint256 _accShareCap, uint256 _withdrawalAmount) external view isApproved returns(uint256) {
-        // Get total raw M-Bill value on account
-        uint256 totalMVal = getTotalMVal(_accShareCap);
+        // Get total account withdrawable value
+        uint256 totalWithdrawable = getTotalMWithdrawable(_accShareCap);
+        if(totalWithdrawable == uint256(0)) {
+            return uint256(0);
+        }
 
         // Get ratio of withdrawal amount to total account value
-        uint256 percWithdrawal = (_withdrawalAmount.div(totalMVal)).mul(100);
+        uint256 percWithdrawal = (_withdrawalAmount.mul(100)).div(totalWithdrawable);
         if(percWithdrawal == uint256(0)) {
             percWithdrawal = 1;
         }
@@ -413,11 +416,14 @@ contract Base {
 
     // Function to get cost for approved debenture request
     function getDebentureCost(uint256 _accShareCap, uint256 _debentureAmount) external view isApproved returns(uint256) {
-        // Get total raw M-Bill value on account
-        uint256 totalMVal = getTotalMVal(_accShareCap);
+        // Get total account lendable value
+        uint256 totalLendable = getTotalDebenture(_accShareCap);
+        if(totalLendable == uint256(0)) {
+            return uint256(0);
+        }
 
         // Get ratio of debenture amount to total account value
-        uint256 percDebenture = (_debentureAmount.div(totalMVal)).mul(100);
+        uint256 percDebenture = (_debentureAmount.mul(100)).div(totalLendable);
         if(percDebenture == uint256(0)) {
             percDebenture = 1;
         }

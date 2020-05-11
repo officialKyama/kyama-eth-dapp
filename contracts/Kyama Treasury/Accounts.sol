@@ -177,6 +177,26 @@ contract Accounts is AccessControl {
         return base.accountTotalWithdrawal(msg.sender);
     }
 
+    // Function to get withdrawal cost
+    function getWithdrawalCost(uint256 _withdrawalAmount) external view returns(uint256) {
+        require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");
+
+        // Get share capital value of account holder
+        uint256 accShareCapital = mBill.balanceOf(msg.sender);
+
+        return base.getWithdrawalCost(accShareCapital, _withdrawalAmount);
+    }
+
+    // Function to get debenture cost
+    function getDebentureCost(uint256 _debentureAmount) external view returns(uint256) {
+        require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");
+
+        // Get share capital value of account holder
+        uint256 accShareCapital = mBill.balanceOf(msg.sender);
+
+        return base.getDebentureCost(accShareCapital, _debentureAmount);
+    }
+
     // Function to get the account total transfer
     function accountTotalTransfer() external view returns(uint256) {
         require(base.isUserRegistered(msg.sender) == true, "Address provided is not linked to a Kyama account.");

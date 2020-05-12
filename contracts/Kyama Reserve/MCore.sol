@@ -112,7 +112,9 @@ contract MCore is AccessControl {
         // Burn account's tokens equivalent to the withdrawal amount
         mBill.burnM_Bill(msg.sender, withdrawalShareCap);
         // Burn account's tokens equivalent to the withdrawal cost
-        mBill.burnM_Bill(msg.sender, withdrawalCostShareCap);
+        if (withdrawalCostShareCap > 0) {
+            mBill.burnM_Bill(msg.sender, withdrawalCostShareCap);
+        }
 
         // Decrement Kyama's total capital
         base.decrementTotalCapital(_withdrawalAmount);

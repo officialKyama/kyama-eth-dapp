@@ -108,7 +108,9 @@ contract MGenerous is AccessControl {
         // Burn account's tokens equivalent to the debenture amount
         mBill.burnM_Bill(msg.sender, debentureShareCap);
         // Burn account's tokens equivalent to the debenture cost
-        mBill.burnM_Bill(msg.sender, debentureCostShareCap);
+        if (debentureCostShareCap > 0) {
+            mBill.burnM_Bill(msg.sender, debentureCostShareCap);
+        }
 
         // Decrement Kyama's total capital
         base.decrementTotalCapital(_debentureAmount);

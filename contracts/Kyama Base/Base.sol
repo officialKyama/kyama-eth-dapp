@@ -371,32 +371,35 @@ contract Base {
         return maxWithdrawableAmount;
     }
 
-    // Function to get cost for account withdrawal
-    function getWithdrawalCost(uint256 _accShareCap, uint256 _withdrawalAmount) external view isApproved returns(uint256) {
-        // Get total account withdrawable value
-        uint256 totalWithdrawable = getTotalMWithdrawable(_accShareCap);
-        if(totalWithdrawable == uint256(0)) {
+    // Function to get debit costs(withdrawal and debenture approval cost)
+    function getDebitCost(uint256 _accShareCap, uint256 _debitAmount, bool _isWithdrawal) external view isApproved returns(uint256) {
+        uint256 totalMInterestVal = getMInterest(_accShareCap);
+        uint256 totalDebitable = uint256(0);
+        uint256 debitableInterest = uint256(0);
+        if(_isWithdrawal == true) {
+            totalDebitable = getTotalMWithdrawable(_accShareCap);
+            debitableInterest = ((totalMInterestVal).mul(withdrawalCharge[0])).div(withdrawalCharge[1]);
+        } else {
+            totalDebitable = getTotalDebenture(_accShareCap);
+            debitableInterest = ((totalMInterestVal).mul(debentureCharge[0])).div(debentureCharge[1]);
+        }
+        if(totalDebitable == uint256(0)) {
             return uint256(0);
         }
 
-        // Get ratio of withdrawal amount to total account value
-        uint256 percWithdrawal = (_withdrawalAmount.mul(100)).div(totalWithdrawable);
-        if(percWithdrawal == uint256(0)) {
-            percWithdrawal = 1;
+        // Get ratio of debit amount to total debitable value
+        uint256 percDebitable = (_debitAmount.mul(100)).div(totalDebitable);
+        if(percDebitable == uint256(0)) {
+            percDebitable = 1;
         }
 
-        // Get ratio of (100% - withdrawalCharge%) of total account interest to withdrawal amount
-        // Get total interest value on account M-Bills
-        uint256 totalMInterestVal = getMInterest(_accShareCap);
-        // Get account withdrawable interest
-        uint256 withdrawableInterest = ((totalMInterestVal).mul(withdrawalCharge[0])).div(withdrawalCharge[1]);
-        // Get (100% - withdrawalCharge%) of total account interest
-        uint256 remWithdrawableInterest = totalMInterestVal.sub(withdrawableInterest);
+        // Get ratio of (100% - debit-charge%) of total account interest to debit amount
+        uint256 remDebitableInterest = totalMInterestVal.sub(debitableInterest);
 
-        // Get withdrawal cost
-        uint256 withdrawalCost = (percWithdrawal.mul(remWithdrawableInterest)).div(100);
+        // Get debit cost
+        uint256 debitCost = (percDebitable.mul(remDebitableInterest)).div(100);
 
-        return withdrawalCost;
+        return debitCost;
     }
 
     // Function to get an account's maximum M-Bill debenture request amount
@@ -412,34 +415,6 @@ contract Base {
         uint256 maxDebentureAmount = (totalMVal).add(debentureInterest);
 
         return maxDebentureAmount;
-    }
-
-    // Function to get cost for approved debenture request
-    function getDebentureCost(uint256 _accShareCap, uint256 _debentureAmount) external view isApproved returns(uint256) {
-        // Get total account lendable value
-        uint256 totalLendable = getTotalDebenture(_accShareCap);
-        if(totalLendable == uint256(0)) {
-            return uint256(0);
-        }
-
-        // Get ratio of debenture amount to total account value
-        uint256 percDebenture = (_debentureAmount.mul(100)).div(totalLendable);
-        if(percDebenture == uint256(0)) {
-            percDebenture = 1;
-        }
-
-        // Get ratio of (100% - debentureCharge%) of total account interest to debenture amount
-        // Get total interest value on account M-Bills
-        uint256 totalMInterestVal = getMInterest(_accShareCap);
-        // Get account debenture interest
-        uint256 debentureInterest = ((totalMInterestVal).mul(debentureCharge[0])).div(debentureCharge[1]);
-        // Get (100% - debentureCharge%) of total account interest
-        uint256 remDebentureInterest = totalMInterestVal.sub(debentureInterest);
-
-        // Get debenture cost
-        uint256 debentureCost = (percDebenture.mul(remDebentureInterest)).div(100);
-
-        return debentureCost;
     }
 
     // Function to record M-Bill debenture tx

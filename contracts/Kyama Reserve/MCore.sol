@@ -105,7 +105,7 @@ contract MCore is AccessControl {
         uint256 withdrawalShareCap = _withdrawalAmount.div(acc_MPPS);
 
         // Get cost of withdrawal
-        uint256 withdrawalCost = base.getWithdrawalCost(accShareCapital, _withdrawalAmount);
+        uint256 withdrawalCost = base.getDebitCost(accShareCapital, _withdrawalAmount, true);
         // Get share capital equivalent to withdrawal cost
         uint256 withdrawalCostShareCap = withdrawalCost.div(acc_MPPS);
 

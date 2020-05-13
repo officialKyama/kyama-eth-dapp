@@ -184,7 +184,7 @@ contract Accounts is AccessControl {
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
-        return base.getWithdrawalCost(accShareCapital, _withdrawalAmount);
+        return base.getDebitCost(accShareCapital, _withdrawalAmount, true);
     }
 
     // Function to get debenture cost
@@ -194,7 +194,7 @@ contract Accounts is AccessControl {
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
-        return base.getDebentureCost(accShareCapital, _debentureAmount);
+        return base.getDebitCost(accShareCapital, _debentureAmount, false);
     }
 
     // Function to get the account total transfer

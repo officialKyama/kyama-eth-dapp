@@ -101,7 +101,7 @@ contract MGenerous is AccessControl {
         uint256 debentureShareCap = _debentureAmount.div(acc_MPPS);
 
         // Get cost of approved debenture
-        uint256 debentureCost = base.getDebentureCost(accShareCapital, _debentureAmount);
+        uint256 debentureCost = base.getDebitCost(accShareCapital, _debentureAmount, false);
         // Get share capital equivalent to debenture cost
         uint256 debentureCostShareCap = debentureCost.div(acc_MPPS);
 

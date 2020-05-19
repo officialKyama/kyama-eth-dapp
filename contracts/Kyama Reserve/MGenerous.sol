@@ -43,8 +43,6 @@ contract MGenerous is AccessControl {
         // Get share capital value of account holder
         uint256 accShareCapital = mBill.balanceOf(msg.sender);
 
-        require(base.isAccountHarmonized(msg.sender, accShareCapital) == true, "Account is yet to meet investment consensus.");
-
         // Get total account value
         uint256 totalAccVal = base.getTotalMVal(accShareCapital);
 

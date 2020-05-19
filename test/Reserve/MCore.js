@@ -154,7 +154,7 @@ contract("MCore", (accs) => {
         assert.isAtLeast(totalAccVal.toNumber(), maxWithdrawable.toNumber());
     });
 
-    it("Ensures that the withdrawal amount is less than the max withdrawal amount", async () => {
+    it("Ensures that the withdrawal amount is less than or equal to the max withdrawal amount", async () => {
         const accShareCap = await mBillInstance.balanceOf(accounts[2]);
         const maxWithdrawable = await baseInstance.getTotalMWithdrawable(accShareCap);
         truffleAssert.reverts(

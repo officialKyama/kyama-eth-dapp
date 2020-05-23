@@ -578,8 +578,8 @@ contract Base {
         }
     }
 
-    // Get account current interest value
-    function accountCurrentInterest(address _accountAddress, uint256 _accShareCap) public view isApproved returns(uint256) {
+    // Get account total interest value
+    function accountTotalInterest(address _accountAddress, uint256 _accShareCap) public isApproved returns(uint256) {
         // Get account running value
         int256 accRunningVal = accounts[accountIndexes[_accountAddress]].m_running_value;
         uint256 currentAccountInterest = 0;
@@ -592,13 +592,6 @@ contract Base {
                 currentAccountInterest = totalMVal.sub(runningVal);
             }
         }
-
-        return currentAccountInterest;
-    }
-
-    // Get account total interest value
-    function accountTotalInterest(address _accountAddress, uint256 _accShareCap) public isApproved returns(uint256) {
-        uint256 currentAccountInterest = accountCurrentInterest(_accountAddress, _accShareCap);
 
         uint256 accHighestInterest = accounts[accountIndexes[_accountAddress]].highestMInterest;
         if(accHighestInterest >= currentAccountInterest) {
